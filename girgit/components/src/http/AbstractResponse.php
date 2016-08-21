@@ -14,9 +14,28 @@
 namespace Girgit\Http;
 
 use InvalidArgumentException;
- 
+
+/**
+ * The abstract class for Girgit\Http\Response.
+ *
+ * Method Prototypes:
+ *
+ * protected function __construct()
+ * protected function _setJson($content)
+ * protected function _setHtml($content)
+ * protected function _setCode($code)
+ * protected function _setHeaders($headers)
+ * protected function _setMessage($message)
+ * protected function _sendHeaders()
+ * protected function _sendContent()
+ */
 class AbstractResponse
 {
+    /**
+     * HTTP response codes and messages
+     *
+     * @var array
+     */
     protected static $_statusMessages = [
         // Success 2xx
         200 => 'OK',                   
@@ -35,12 +54,50 @@ class AbstractResponse
         500 => 'Internal Server Error',
         503 => 'Service Unavailable'
     ];
+    
+    /**
+     * Represents HTTP Content-Type
+     *
+     * @var string
+     */
     protected $_type;
+    
+    /**
+     * Represents HTTTP response body
+     *
+     * @var string
+     */
     protected $_body;
+    
+    /**
+     * Represents HTTP response status code
+     *
+     * @var int
+     */
     protected $_code;
+    
+    /**
+     * Represents HTTP response status message
+     *
+     * @var string
+     */
     protected $_message;
+    
+    /**
+     * Represents custom HTTP response headers provided by client
+     */
     protected $_headers;
     
+    /**
+     * Class contructor
+     *
+     * Invoked by the extending class, it initializes few properties to their
+     * defaults.
+     *
+     * @access  protected
+     *
+     * @return  void
+     */
     protected function __construct()
     {
         $this->_type    = 'text/html';
@@ -50,6 +107,17 @@ class AbstractResponse
         $this->_headers = [];
     }
     
+    /**
+     * This method sets the HTTP response content and type for JSON format.
+     *
+     * @access  protected
+     *
+     * @param  array  $content  The array to be encoded as JSON response content
+     *
+     * @throws  InvalidArgumentException
+     *
+     * @return  void
+     */
     protected function _setJson($content)
     {
         if(!is_array($content)) {
@@ -60,6 +128,17 @@ class AbstractResponse
         $this->_body = json_encode($content);
     }
     
+    /**
+     * This method sets the HTTP response content and type for HTML format.
+     *
+     * @access  protected
+     *
+     * @param  string  $content  The HTML string
+     *
+     * @throws  InvalidArgumentException
+     *
+     * @return  void
+     */
     protected function _setHtml($content)
     {
         if(!is_string($content) && !is_numeric($content)) {
@@ -70,6 +149,18 @@ class AbstractResponse
         $this->_body = $content;
     }
     
+    /**
+     * This method sets the HTTP response code and status message when the code is
+     * provided by the client.
+     *
+     * @access  protected
+     *
+     * @param  int  $code  The HTTP response code
+     *
+     * @throws  InvalidArgumentException
+     *
+     * @return  void
+     */
     protected function _setCode($code)
     {
         $code = (int) $code;
@@ -82,8 +173,21 @@ class AbstractResponse
         $this->_message = isset(self::$_statusMessages[$code]) ? self::$_statusMessages[$code] : 'unknown status';
     }
     
+    /**
+     * This method sets the HTTP response headers supplied by the client.
+     *
+     * @access  protected
+     *
+     * @param  array  $headers  An array of $name => $value header pairs.
+     *
+     * @throws  InvalidArgumentException
+     *
+     * @return  void
+     */
     protected function _setHeaders($headers)
     {
+        print_r($headers);
+        
         if(!is_array($headers)) {
             throw new InvalidArgumentException('Supplied headers must be an array of Name => Value pairs');
         }
@@ -93,11 +197,29 @@ class AbstractResponse
         }
     }
     
+    /**
+     * This method sets the HTTP response message supplied by the client.
+     *
+     * @access  protected
+     *
+     * @param  string  $message  The HTTP response message
+     *
+     * @throws  InvalidArgumentException
+     *
+     * @return  void
+     */
     protected function _setMessage($message)
     {
         $this->_message = (string) $message;
     }
     
+    /**
+     * This method sends all HTTP headers.
+     *
+     * @access  protected
+     *
+     * @return  void
+     */
     protected function _sendHeaders()
     {
         header(sprintf("HTTP/1.1 %s %s", $this->_code, $this->_message));
@@ -108,6 +230,13 @@ class AbstractResponse
         }
     }
     
+    /**
+     * This method outputs the HTTP response body.
+     *
+     * @access  protected
+     *
+     * @return  void
+     */
     protected function _sendContent()
     {
         echo $this->_body;

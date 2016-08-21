@@ -1,9 +1,29 @@
 <?php
 
+/**
+ * @package Girgit
+ * @license MIT
+ * @author Pradeep T. <pt21388@gmail.com>
+ * @copyright Copyright (c) 2016, Pradeep T.
+ *
+ * This file is part of the Girgit package. For the full copyright and license
+ * information, please view the LICENSE file that was distributed with this source
+ * code.
+ */
+
 namespace Girgit\Http;
 
+/**
+ * This class is a static wrapper for publishing details about few HTTP response
+ * codes in a friendly format.
+ */
 class ExplainStatusCodes
 {
+    /**
+     * Represents an array of HTTP response codes and their details.
+     *
+     * @var array
+     */
     private static $_codeMaps = [
         200 => [
             'message' => 'HTTP_OK',
@@ -51,6 +71,16 @@ class ExplainStatusCodes
         ],
     ];
     
+    /**
+     * Call this static method to pretty print the details of an HTTP code. If code
+     * is not provided, it publishes the complete details for all defined codes.
+     *
+     * @access  public
+     *
+     * @param  int  $code  The HTTP response code
+     *
+     * @return  void
+     */
     public static function explain($code = null)
     {
         if($code !== null) {
@@ -60,6 +90,13 @@ class ExplainStatusCodes
         }
     }
     
+    /**
+     * Internal helper, called when details of a single HTTP code is required.
+     *
+     * @access private
+     *
+     * @return void
+     */
     private static function _publishOne($code)
     {
         if(!isset(self::$_codeMaps[$code])) {
@@ -70,11 +107,28 @@ class ExplainStatusCodes
         self::_formatInfo(print_r(self::$_codeMaps[$code], 1));
     }
     
+    /**
+     * Internal helper, called when details of a all defined HTTP codes is required.
+     *
+     * @access private
+     *
+     * @return void
+     */
     private static function _publishAll()
     {
         self::_formatInfo(print_r(self::$_codeMaps, 1));
     }
     
+    /**
+     * Internal helper, that when called upon, pretty prints the information text.
+     *
+     * @access  private
+     *
+     * @param  string   $text     The text to pretty print.
+     * @param  boolean  $isError  Whether the asked HTTP code is defined, if not, pass true.
+     *
+     * @return void
+     */
     private static function _formatInfo($text, $isError = false)
     {
         $html = '';
