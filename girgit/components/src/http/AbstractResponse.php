@@ -85,6 +85,8 @@ class AbstractResponse
     
     /**
      * Represents custom HTTP response headers provided by client
+     * 
+     * @var array
      */
     protected $_headers;
     
