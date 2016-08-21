@@ -68,9 +68,9 @@ class Response extends AbstractResponse
      * 
      * @param   string  $method  The name of the method set by PHP
      * @param   array   $args    An array representing passed argumenets set by PHP
-     
+     *
      * @throws  BadMethodCallException
-     
+     *
      * @return  Response
      */
     public function __call($method, $args)
@@ -95,7 +95,7 @@ class Response extends AbstractResponse
      * @param   string  $property  The name of the property set by PHP
      * 
      * @throws  BadPropertyCallException
-     
+     *
      * @return  mixed
      */
     public function __get($property)
@@ -126,7 +126,7 @@ class Response extends AbstractResponse
     /**
      * This method pretty prints the detailed information about most frequently used
      * HTTP status code. When no HTTP code is passed, it prints all status code and
-     * their details. This class utilizes Girgit\Http\ExplainStatusCodes.
+     * their details. This method utilizes Girgit\Http\ExplainStatusCodes.
      *
      * @access  public
      *
